@@ -4,8 +4,16 @@ export enum TokenType {
   INDENTIFIER = "IDENTIFIER",
   INTEGER = "INTEGER",
   ASSIGN = "=",
+  EQUAL = "==",
+  NOTEQUAL = "!=",
   PLUS = "+",
   COMMA = ",",
+  MINUS = "-",
+  BANG = "!",
+  ASTRISK = "*",
+  SLASH = "/",
+  LT = "<",
+  GT = ">",
   SEMICOLON = ";",
   LPAREN = "(",
   RPAREN = ")",
@@ -13,6 +21,11 @@ export enum TokenType {
   RBRACE = "}",
   FUNCTION = "FUNCTION",
   LET = "LET",
+  TRUE = "TRUE",
+  FALSE = "FALSE",
+  IF = "IF",
+  ELSE = "ELSE",
+  RETURN = "RETURN",
 }
 
 export class Token {
@@ -22,4 +35,9 @@ export class Token {
 export const keywords = {
   fn: TokenType.FUNCTION,
   let: TokenType.LET,
+  true: TokenType.TRUE,
+  false: TokenType.FALSE,
+  if: TokenType.IF,
+  else: TokenType.ELSE,
+  return: TokenType.RETURN,
 };

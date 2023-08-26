@@ -1,52 +1,53 @@
 import { Utils } from "./utils";
 
 export class InputHandler {
-  private currentPosition: number = 0;
-  private forwardPosition: number = 0;
-  private _char: string;
+  private position: number = 0;
+  public readPosition: number = 0;
+  public char: string = "";
 
   constructor(private input: string) {
-    this._char = "";
-  }
-
-  get char() {
-    return this._char;
-  }
-  readChar() {
-    if (this.forwardPosition >= this.input.length) this._char = "";
-    else this._char = this.input[this.forwardPosition];
-    this.currentPosition = this.forwardPosition;
-    this.forwardPosition++;
-  }
-
-  skipWhitespace() {
     this.readChar();
+  }
+
+  readChar() {
+    if (this.readPosition >= this.input.length) this.char = "eof";
+    else this.char = this.input[this.readPosition];
+    this.position = this.readPosition;
+    this.readPosition += 1;
+  }
+
+  peekChar() {
+    if (this.readPosition >= this.input.length) return "eof";
+    else {
+      return this.input[this.readPosition];
+    }
+  }
+  skipWhitespace() {
     while (
-      this._char === " " ||
-      this._char === "\n" ||
-      this._char === "\t" ||
-      this._char === "\r"
+      this.char === " " ||
+      this.char === "\n" ||
+      this.char === "\t" ||
+      this.char === "\r"
     ) {
       this.readChar();
     }
-    this.currentPosition--;
-    this.forwardPosition--;
   }
 
   readNumber() {
     let num = "";
-    while (Utils.isDigit(this._char)) {
-      num += this._char;
+    while (Utils.isDigit(this.char)) {
+      num += this.char;
       this.readChar();
     }
     return num;
   }
+
   readIdentifier() {
-    let indent = "";
-    while (Utils.isLetter(this._char)) {
-      indent += this._char;
+    let ident = "";
+    while (Utils.isLetter(this.char)) {
+      ident += this.char;
       this.readChar();
     }
-    return indent;
+    return ident;
   }
 }

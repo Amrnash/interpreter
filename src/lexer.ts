@@ -6,7 +6,7 @@ import { InputHandler } from "./input-handler";
 export class Lexer {
   constructor(private inputHandler: InputHandler) {}
 
-  private lookupIdentifierType(identifier: string) {
+  private lookupIdentifierType(identifier: string | undefined) {
     if (keywords[identifier as keyof typeof keywords]) {
       return keywords[identifier as keyof typeof keywords];
     } else {
@@ -16,11 +16,17 @@ export class Lexer {
   nextToken() {
     let token: Token | null = null;
     this.inputHandler.skipWhitespace();
-    this.inputHandler.readChar();
     switch (this.inputHandler.char) {
       case "=":
-        token = new Token(TokenType.ASSIGN, "=");
-        break;
+        const char = this.inputHandler.peekChar();
+        if (char === "=") {
+          this.inputHandler.readChar();
+          token = new Token(TokenType.EQUAL, "==");
+          break;
+        } else {
+          token = new Token(TokenType.ASSIGN, "=");
+          break;
+        }
       case ";":
         token = new Token(TokenType.SEMICOLON, ";");
         break;
@@ -42,19 +48,45 @@ export class Lexer {
       case "+":
         token = new Token(TokenType.PLUS, "+");
         break;
+      case "-":
+        token = new Token(TokenType.MINUS, "-");
+        break;
+      case "!":
+        if (this.inputHandler.peekChar() === "=") {
+          this.inputHandler.readChar();
+          token = new Token(TokenType.NOTEQUAL, "!=");
+          break;
+        } else {
+          token = new Token(TokenType.BANG, "!");
+          break;
+        }
+
+      case "*":
+        token = new Token(TokenType.ASTRISK, "*");
+        break;
+      case "/":
+        token = new Token(TokenType.SLASH, "/");
+        break;
+      case "<":
+        token = new Token(TokenType.LT, "<");
+        break;
+      case ">":
+        token = new Token(TokenType.GT, ">");
+        break;
       default:
         if (Utils.isLetter(this.inputHandler.char)) {
           const identifier = this.inputHandler.readIdentifier();
           const type = this.lookupIdentifierType(identifier);
-          token = new Token(type, identifier);
+          return (token = new Token(type, identifier));
         } else if (Utils.isDigit(this.inputHandler.char)) {
           const number = this.inputHandler.readNumber();
           const type = TokenType.INTEGER;
-          token = new Token(type, number);
+          return (token = new Token(type, number!));
         } else {
           token = new Token(TokenType.ILLIGAL, this.inputHandler.char);
         }
     }
+    this.inputHandler.readChar();
     return token;
   }
 }
