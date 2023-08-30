@@ -4,7 +4,7 @@ import { Utils } from "./utils";
 import { InputHandler } from "./input-handler";
 
 export class Lexer {
-  constructor(private inputHandler: InputHandler) {}
+  constructor(public inputHandler: InputHandler) {}
 
   private lookupIdentifierType(identifier: string | undefined) {
     if (keywords[identifier as keyof typeof keywords]) {

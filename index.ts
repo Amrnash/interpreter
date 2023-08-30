@@ -1,15 +1,21 @@
-import { InputHandler } from "./src/input-handler";
+import readLine from "node:readline/promises";
 import { Lexer } from "./src/lexer";
-const input = "let num = 5;  let add = fn (x , y) { x + y}  !-/* 5 < 10 > 5";
-const handler = new InputHandler(input);
-const lexer = new Lexer(handler);
+import { InputHandler } from "./src/input-handler";
+import { Token, TokenType } from "./src/types/token";
 
-console.log(lexer.nextToken());
-console.log(lexer.nextToken());
-console.log(lexer.nextToken());
-console.log(lexer.nextToken());
+const rl = readLine.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+async function main() {
+  rl.on("line", (line) => {
+    const inputHandler = new InputHandler(line);
+    const lexer = new Lexer(inputHandler);
 
-console.log(lexer.nextToken());
-// console.log(lexer.nextToken());
-// handler.readChar();
-// console.log(handler.char);
+    while (lexer.inputHandler.char !== "eof") {
+      console.log(lexer.nextToken());
+    }
+  });
+}
+
+main();
